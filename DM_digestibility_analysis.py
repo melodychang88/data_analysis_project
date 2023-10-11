@@ -3,14 +3,19 @@ import csv
 all_rows = []
 with open("sow1_CON_DM_digestibility.csv", encoding='utf-8-sig') as csvfile :
     raw_data = csv.reader(csvfile)
+    #預設以列讀取data
     for row in raw_data:
+        #把數據加進去空list裡
         all_rows.append(row)
 
 
-# transform list to dictionary 
+# transform list to dictionary
+#第0列為各column名稱 
 col_names = all_rows[0]
 all_data = []
+#第一列以下的data為dict的value
 for row in all_rows[1:]:
+    #一個key對一個value
     i = 0
     row_dict = {}
     for col_name in col_names:
@@ -21,18 +26,33 @@ for row in all_rows[1:]:
 all_data
 
 #calculate diet dry matter
-diet_dry_matter= []
+diet_dry_matter = []
 #從all_data中一次取一個dict
-for data in all_data[0:]:
+for data in all_data:
     dm_dict = {}
-    dm_dict['Diet_DM'] = float(data['Diet weight'])*float(data['Diet_DM_percentage'])
+    dm_dict['Diet_DM'] = round(float(data['Diet_weight'])*float(data['Diet_DM_percentage']), 4)
     diet_dry_matter.append(dm_dict)
 
 diet_dry_matter
 
+#calculate digesta weight
+digesta_weight = []
+#從all_data中一次取一個dict
+for data in all_data:
+    digesta_dict = {}
+    #round(X變數, n取幾位)
+    digesta_dict['Digesta_weight'] = round(float(data['Freeze_dry_weight'])-float(data['Tube_weight']), 4)
+    digesta_weight.append(digesta_dict)
 
+digesta_weight
 
-
-sample_1 = all_rows[1]
-diet_dry_matter = float(sample_1[2])* float(sample_1[3])
-print(diet_dry_matter)
+#calculate DM digestibility
+dry_matter_digestibility = []
+for diet_data, digesta_data in zip(diet_dry_matter, digesta_weight):
+    DM_digestibility_dict = {}
+    diet_DM = float(diet_data['Diet_DM'])
+    digesta_wt = float(digesta_data['Digesta_weight'])
+    DM_digestibility_dict['DM_digestibility'] = round((diet_DM - digesta_wt) / diet_DM * 100, 4)
+    dry_matter_digestibility.append(DM_digestibility_dict)
+    
+dry_matter_digestibility

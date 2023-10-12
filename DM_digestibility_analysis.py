@@ -56,3 +56,20 @@ for diet_data, digesta_data in zip(diet_dry_matter, digesta_weight):
     dry_matter_digestibility.append(DM_digestibility_dict)
     
 dry_matter_digestibility
+
+# put the digestibility in sequence
+digestibility_sequence = []
+for digest_data in dry_matter_digestibility:
+    digestibility_sequence.append(digest_data['DM_digestibility'])
+
+digestibility_sequence.sort()
+print(digestibility_sequence)
+
+# delete extreme value
+def filter_extremes(data, lower_threshold, upper_threshold):
+    filtered_data = [x for x in data if lower_threshold <= x <= upper_threshold]
+    return filtered_data
+ 
+ 
+ 
+ 

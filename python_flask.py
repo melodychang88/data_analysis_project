@@ -11,7 +11,7 @@ def index():
     return "Hello From Ting Ting, Chang" #回傳網站首頁的內容
 
 #啟動網站伺服器py
-app.run()
+app.run(host="0.0.0.0")
 
 #若要終止程式按"ctrl+c"
 #打clear 清除之前的命令

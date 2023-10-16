@@ -1,7 +1,13 @@
 # import Flask
 from flask import Flask
-# bulit application object 
-app=Flask(__name__)
+# import request object
+from flask import request
+
+# bulit application object ,可以設定靜態檔案的路徑
+app=Flask(__name__, static_folder="static",   #靜態檔案的資料夾名稱
+    static_url_path="/"    #靜態檔案對應的網址名稱
+    )
+#所有在static 資料夾底下的檔案，都對應到網址路徑 /檔案名稱
 
 # 建立路徑 / 對應的處理函式
 # /代表網站首頁

@@ -14,7 +14,19 @@ app=Flask(__name__, static_folder="static",   #靜態檔案的資料夾名稱
 @app.route("/")
 #用來回應路徑 / 的處理函式
 def index():
-    return "Hello From Ting Ting, Chang" #回傳網站首頁的內容
+    # print("請求方法", request.method)
+    # print("通訊協定", request.scheme)
+    # print("主機名稱", request.host)
+    # print("路徑", request.path)
+    # print("完整的網址", request.url)
+    # print("瀏覽器和作業系統", request.headers.get("user-agent"))
+    # print("語言偏好", request.headers.get("accept-language"))
+    # print("引薦網址", request.headers.get("referrer"))
+    lang= request.headers.get("accept-language")
+    if lang.startswith("en"):
+        return "Hello From Ting Ting, Chang" #回傳網站首頁的內容
+    else:
+        return "您好，歡迎光臨"
 
 #建立路徑 /data 對應的處理函式
 @app.route("/data")
@@ -29,6 +41,18 @@ def handleusername(username):
         return "Hello " +username
     else:
         return "Hello "+ username
+
+# 建立路徑 /getSum 對應的處理函式
+# 利用要求字串 (Query String) 提供彈性: getSum?max=最大數字，若要求字串中沒有參數max，maxNumber預設值為100
+@app.route("/getSum")
+def getSum():  #1+2+3+...+max
+    maxNumber= request.args.get("max", 100)
+    #maxNumber從網址取得時為string的形式，要轉換成數字
+    maxNumber=int(maxNumber)
+    result=0
+    for n in range(1,maxNumber+1):
+        result+=n
+    return "結果："+str(result)
 
 #啟動網站伺服器，可透過"port"參數指定port
 app.run(host="0.0.0.0", port=3000)

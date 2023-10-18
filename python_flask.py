@@ -31,8 +31,10 @@ def index():
     #     return redirect("/en/")
     # else:
     #     return redirect("/zh/")
-    return render_template("index", name="婷婷")
+    # return render_template("index", name="婷婷")
 
+    return render_template("index.html")
+    
 #建立路徑 /en/ 對應的處理函式
 @app.route("/en/")
 def index_english():

@@ -2,6 +2,9 @@
 from flask import Flask
 # import request object
 from flask import request
+from flask import redirect #載入redirect函式
+from flask import render_template #載入render_template函式
+import json #載入json模組
 
 # bulit application object ,可以設定靜態檔案的路徑
 app=Flask(__name__, static_folder="static",   #靜態檔案的資料夾名稱
@@ -22,12 +25,30 @@ def index():
     # print("瀏覽器和作業系統", request.headers.get("user-agent"))
     # print("語言偏好", request.headers.get("accept-language"))
     # print("引薦網址", request.headers.get("referrer"))
-    lang= request.headers.get("accept-language")
-    if lang.startswith("en"):
-        return "Hello From Ting Ting, Chang" #回傳網站首頁的內容
-    else:
-        return "您好，歡迎光臨"
+    
+    # lang= request.headers.get("accept-language")
+    # if lang.startswith("en"):
+    #     return redirect("/en/")
+    # else:
+    #     return redirect("/zh/")
+    return render_template("index", name="婷婷")
 
+#建立路徑 /en/ 對應的處理函式
+@app.route("/en/")
+def index_english():
+    return json.dumps({
+        "status":"ok", 
+        "text":"Hello From Ting Ting, Chang"
+        }) #回傳網站首頁的內容
+
+#建立路徑 /zh/ 對應的處理函式
+@app.route("/zh/")
+def index_chinese():
+    return json.dumps({
+        "status":"ok", 
+        "text":"您好，歡迎光臨"
+        }, ensure_ascii=False) #指示不要用ASCII編碼處理中文
+    
 #建立路徑 /data 對應的處理函式
 @app.route("/data")
 #用來回應路徑"/data"的處理函式
@@ -43,15 +64,21 @@ def handleusername(username):
         return "Hello "+ username
 
 # 建立路徑 /getSum 對應的處理函式
-# 利用要求字串 (Query String) 提供彈性: getSum?max=最大數字，若要求字串中沒有參數max，maxNumber預設值為100
+# 利用要求字串 (Query String) 提供彈性: getSum?min=最小數字&max=最大數字&...
+# 若要求字串中沒有參數min, max,...，則呈現預設值
 @app.route("/getSum")
-def getSum():  #1+2+3+...+max
+def getSum():  #min+(min+1)+(min+2)+...+max
+    #接收要求字串中的參數資料
     maxNumber= request.args.get("max", 100)
     #maxNumber從網址取得時為string的形式，要轉換成數字
     maxNumber=int(maxNumber)
+    minNumber= request.args.get("min", 1)
+    minNumber=int(minNumber)
+    #以下運算 min+(min+1)+(min+2)+...+max 總和的迴圈邏輯
     result=0
-    for n in range(1,maxNumber+1):
+    for n in range(minNumber,maxNumber+1):
         result+=n
+    #把結果回應給前端
     return "結果："+str(result)
 
 #啟動網站伺服器，可透過"port"參數指定port

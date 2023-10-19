@@ -39,9 +39,25 @@ def index():
 @app.route("/page")
 def page():
     return render_template("page.html")
+
+# 處理路徑 /show 的對應函式
+@app.route("/show")
+def show():
+    name= request.args.get("n", "")  #從query string中取得前端使用者在輸入框輸入的文字
+    return "Hi," +name
+
+# 處利路徑 /calculate 的對應函式
+@app.route("/calculate")
+def calculate():
+    max_number=request.args.get("max", "")
+    max_number=int(max_number)  #max_number為str要轉換成int，再計算
+    # 1+2+...+max_number
+    result=0
+    for n in range(1, max_number+1):
+        result += n
+    return render_template("result.html", data= str(result))
     
 #建立路徑 /en/ 對應的處理函式
-@app.route("/en")
 def index_english():
     return json.dumps({
         "status":"ok", 

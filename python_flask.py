@@ -8,7 +8,7 @@ import json #載入json模組
 
 # bulit application object ,可以設定靜態檔案的路徑
 app=Flask(__name__, static_folder="static",   #靜態檔案的資料夾名稱
-    static_url_path="/"    #靜態檔案對應的網址名稱
+    static_url_path="/"    #靜態檔案對應的網址名稱 http://127.0.0.1:3000/mike.jpg 
     )
 #所有在static 資料夾底下的檔案，都對應到網址路徑 /檔案名稱
 
@@ -28,15 +28,20 @@ def index():
     
     # lang= request.headers.get("accept-language")
     # if lang.startswith("en"):
-    #     return redirect("/en/")
+    #     return redirect("/en")
     # else:
-    #     return redirect("/zh/")
+    #     return redirect("/zh")
     # return render_template("index", name="婷婷")
 
     return render_template("index.html")
+
+# 處理路徑 /page 的對應函式
+@app.route("/page")
+def page():
+    return render_template("page.html")
     
 #建立路徑 /en/ 對應的處理函式
-@app.route("/en/")
+@app.route("/en")
 def index_english():
     return json.dumps({
         "status":"ok", 
@@ -44,7 +49,7 @@ def index_english():
         }) #回傳網站首頁的內容
 
 #建立路徑 /zh/ 對應的處理函式
-@app.route("/zh/")
+@app.route("/zh")
 def index_chinese():
     return json.dumps({
         "status":"ok", 

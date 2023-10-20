@@ -14,8 +14,8 @@ app=Flask(__name__, static_folder="static",   #靜態檔案的資料夾名稱
 
 # 建立路徑 / 對應的處理函式
 # /代表網站首頁
+#使用GET來方法，處理路徑 / 的處理函式
 @app.route("/")
-#用來回應路徑 / 的處理函式
 def index():
     # print("請求方法", request.method)
     # print("通訊協定", request.scheme)
@@ -46,10 +46,14 @@ def show():
     name= request.args.get("n", "")  #從query string中取得前端使用者在輸入框輸入的文字
     return "Hi," +name
 
-# 處利路徑 /calculate 的對應函式
-@app.route("/calculate")
+# 使用POST方法，處利路徑 /calculate 的對應函式
+@app.route("/calculate", methods=["POST"])
 def calculate():
-    max_number=request.args.get("max", "")
+    # 接收GET方法的query string
+    # max_number=request.args.get("max", "")
+    
+    #接收POST方法的query string
+    max_number=request.form["max"]
     max_number=int(max_number)  #max_number為str要轉換成int，再計算
     # 1+2+...+max_number
     result=0

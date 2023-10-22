@@ -1,19 +1,26 @@
 # import Flask, request, render_template
 from flask import Flask, request, render_template
 import os
+import csv
 
 # bulit application object
 app=Flask(__name__)
 
 
+uploaded_file = None
+filepath = None
 # 建立路徑 / 對應的處理函式
 # /代表網站首頁
 #使用GET來方法，處理路徑 / 的處理函式
 @app.route("/", methods=["GET", "POST"])
 def upload_file():
     upload_successful = False
+    global uploaded_file
+    global filepath
     if request.method == "POST":
-        uploaded_file = request.files.get('file')
+        uploaded_file = request.files['file']
+        filepath = os.path.join(app.config["file_uploads"], uploaded_file.filename)
+        uploaded_file.save(filepath)
         if uploaded_file is not None:
             # 上傳成功
             upload_successful = True
@@ -25,10 +32,21 @@ def upload_file():
     else:
         return render_template("index.html")
 
-# 處理路徑 /page 的對應函式
-@app.route("/page")
-def page():
-    return render_template("page.html")
+app.config["file_uploads"] = "C:\\Users\\melod\\OneDrive\\data_analysis_project\\file_upload"
+
+# 處理路徑 /show_data 的對應函式
+@app.route("/show_data")
+def show_data():
+    all_rows = []
+    with open(filepath, encoding='utf-8-sig') as csvfile:
+        raw_data= csv.reader(csvfile)
+        # read raw data in row
+        for row in raw_data:
+            # data is added into list "all_rows"
+            all_rows.append(row)
+    
+    return all_rows
+    
 
 # 處理路徑 /show 的對應函式
 @app.route("/show")

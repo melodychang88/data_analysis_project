@@ -22,24 +22,28 @@ file_path_dict = {}
 def upload_file():
     # upload_successful default is False
     upload_successful = False
-    # define filepath_dict to global varible
+    # define file_path_dict to global varible
     global file_path_dict
     # if client use POST method to request server
     if request.method == "POST":
-        #
-        uploaded_file_list = request.files.getlist("file")
+        # use request.files.getlist() to get the uploaded file
+        try:
+            uploaded_file_list = request.files.getlist("file")
 
-        for uploaded_file in uploaded_file_list:
-            uploaded_file_name = uploaded_file.filename
-            file_path = os.path.join(app.config["file_uploads"], uploaded_file_name)
-            uploaded_file.save(file_path)
-            file_path_dict[uploaded_file_name] = file_path
+            for uploaded_file in uploaded_file_list:
+                uploaded_file_name = uploaded_file.filename
+                file_path = os.path.join(app.config["file_uploads"], uploaded_file_name)
+                print(file_path)
+                uploaded_file.save(file_path)
+                file_path_dict[uploaded_file_name] = file_path
 
-        if uploaded_file_list is not None:
+            # if uploaded_file_list:
             # 上傳成功
             upload_successful = True
-        else:
+            print("ok")
+        except Exception as e:
             upload_successful = False
+            print("文件上傳時發生異常：", str(e))
 
     if upload_successful:
         return render_template("index2.html")

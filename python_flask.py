@@ -26,25 +26,33 @@ def upload_file():
     global file_path_dict
     # if client use POST method to request server
     if request.method == "POST":
-        # use request.files.getlist() to get the uploaded file
+        # use try and except to check if the user has uploaded files
+        # use request.files.getlist() to get multiple uploaded files
         try:
             uploaded_file_list = request.files.getlist("file")
-
+            # use for-loop to get the uploaded_file from uploaded_file_list
             for uploaded_file in uploaded_file_list:
+                # use .filename to get the name of uploaded_file
+                # if user doesn't load file, the following program will not execute. Instead, execute except
                 uploaded_file_name = uploaded_file.filename
+                # use os.path.join() to combine the directory and filename into a path
+                # app.config is a dictionary, ["file_uploads"] is key, "C:\\Users\\melod\\OneDrive\\data_analysis_project\\file_upload" is value
                 file_path = os.path.join(app.config["file_uploads"], uploaded_file_name)
-                print(file_path)
+                # save the uploaded file in file_path
                 uploaded_file.save(file_path)
+                # add key "file name" and value "file path" into dictionary file_path_dict
                 file_path_dict[uploaded_file_name] = file_path
 
-            # if uploaded_file_list:
-            # 上傳成功
+            # upload_successful change to True
             upload_successful = True
-            print("ok")
+
+        # if user doesn't load file, except will be executed
         except Exception as e:
             upload_successful = False
             print("文件上傳時發生異常：", str(e))
 
+    # upload_successful = True, return index2.html
+    # upload_successful = Falue, return index.html
     if upload_successful:
         return render_template("index2.html")
     else:

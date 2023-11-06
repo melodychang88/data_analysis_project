@@ -7,7 +7,38 @@
 <body>
     <p style="color:blue">資料</p>
 
-    {{ data }}
+    <table border="1">
+        <tr>
+            <th>檔名</th>
+            <th>資料</th>
+        </tr>
+        {% for file_name, data in data.items() %}
+        <tr>
+            <td>{{ file_name }}</td>
+            <td>
+                <table border="1">
+                    <tr>
+                        <th>NO</th>
+                        <th>Tube_weight</th>
+                        <th>Diet_weight</th>
+                        <th>Diet_DM_percentage</th>
+                        <th>Freeze_dry_weight</th>
+                    </tr>
+                    {% for row in data %}
+                    <tr>
+                        <td>{{ row[0] }}</td>
+                        <td>{{ row[1] }}</td>
+                        <td>{{ row[2] }}</td>
+                        <td>{{ row[3] }}</td>
+                        <td>{{ row[4] }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
     <form action="/data_analysis">
         <input type="submit" value="消化率"/>
     </form>
